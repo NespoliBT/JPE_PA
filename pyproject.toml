@@ -1,0 +1,73 @@
+[project]
+name = "jpe"
+version = "0.1.0"
+description = "A personal assistant with explicit authority, scoped autonomy, and inert untrusted data"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "nespoli" }]
+keywords = ["ai", "assistant", "openrouter", "llm", "agent"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.12",
+  "Typing :: Typed",
+]
+dependencies = [
+  "openai>=1.60.0",
+  "typer>=0.15.0",
+  "rich>=13.9.0",
+  "pydantic>=2.10.0",
+  "pydantic-settings>=2.7.0",
+  "python-dotenv>=1.0.1",
+  "mcp>=2.3.0",
+]
+
+[project.scripts]
+jpe = "jpe.cli:app"
+
+[dependency-groups]
+dev = [
+  "ruff>=0.9.0",
+  "mypy>=1.14.0",
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.25.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.0,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "ASYNC", "ANN"]
+ignore = ["ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+pretty = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+asyncio_mode = "auto"
+markers = [
+  "live: hits the real OpenRouter API; skipped unless OPENROUTER_API_KEY is set",
+]
